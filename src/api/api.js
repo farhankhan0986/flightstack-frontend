@@ -1,4 +1,8 @@
-const API_BASE = import.meta.env.VITE_API_BASE || "/api";
+const API_BASE = import.meta.env.VITE_API_BASE;
+
+if (!API_BASE) {
+  console.error(" VITE_API_BASE is undefined");
+}
 
 export const getFlights = async (params = {}) => {
   const query = new URLSearchParams(params).toString();
@@ -11,8 +15,8 @@ export const getFlights = async (params = {}) => {
   return res.json();
 };
 
-export const getUserById = async (id) => {
-  const res = await fetch(`${API_BASE}/users/${id}`);
+export const getUserById = async (user_id) => {
+  const res = await fetch(`${API_BASE}/users/${user_id}`);
 
   if (!res.ok) {
     throw new Error("Failed to fetch user");
@@ -37,7 +41,6 @@ export const bookFlight = async (data) => {
   return result;
 };
 
-
 export const getBookings = async (user_id) => {
   const res = await fetch(`${API_BASE}/booking?user_id=${user_id}`);
 
@@ -47,5 +50,3 @@ export const getBookings = async (user_id) => {
 
   return res.json();
 };
-
-
