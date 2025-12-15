@@ -15,7 +15,12 @@ It demonstrates **real-world backend engineering**, including database-driven wo
 🔗 https://flightstack-backend.onrender.com
 
 ---
+## 🌐 Demo Video
 
+**Google Drive Link**
+🔗https://drive.google.com/file/d/1hob3Vqj592V2mYq-s1-1MYAzUXaXJIEc/view?usp=sharing
+
+---
 ## 🛠️ Tech Stack
 
 ### Frontend
@@ -216,7 +221,7 @@ VITE_API_BASE=http://localhost:4000/api
 **Farhan Abid**  
 Full-Stack Developer  
 🔗 GitHub: https://github.com/farhankhan0986
-🔗 e-mail: farhankhan080304@gmail.com
+🔗 E-mail: farhankhan080304@gmail.com
 
 
 ---
