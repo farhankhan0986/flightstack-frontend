@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { getFlights } from "../api/api";
 import FlightCard from "../components/FlightCard";
+import { Search, SlidersHorizontal, Plane } from "lucide-react";
 
 const SearchFlights = ({ onBook }) => {
   const [departure, setDeparture] = useState("");
@@ -84,83 +85,119 @@ const SearchFlights = ({ onBook }) => {
   const airlines = [...new Set(flights.map((f) => f.airline))];
 
   return (
-    <div className="p-6 max-w-5xl mx-auto">
-      <h1 className="text-2xl font-bold mb-4">Search Flights</h1>
+    <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      {/* Search Section */}
+      <div className="card p-6 mb-6">
+        <div className="flex items-center gap-2 mb-5">
+          <div className="w-8 h-8 bg-brand-50 rounded-lg flex items-center justify-center">
+            <Search className="w-4 h-4 text-brand-600" />
+          </div>
+          <h1 className="text-xl font-bold text-gray-900">Search Flights</h1>
+        </div>
 
-      <div className="flex gap-4 mb-4">
-        <input
-          type="text"
-          placeholder="Departure City"
-          className="border p-2 w-full"
-          style={{ backgroundColor: "#e4ebed", borderRadius: "10px" }}
-          value={departure}
-          onChange={(e) => setDeparture(e.target.value.toUpperCase())}
-        />
-        <input
-          type="text"
-          placeholder="Arrival City"
-          className="border p-2 w-full"
-          style={{ backgroundColor: "#e4ebed", borderRadius: "10px" }}
-          value={arrival}
-          onChange={(e) => setArrival(e.target.value.toUpperCase())}
-        />
-        <button
-          onClick={handleSearch}
-          disabled={loading}
-          className="text-white px-4 disabled:opacity-50"
-          style={{ backgroundColor: "#034f84", borderRadius: "10px" }}
-        >
-          Search
-        </button>
+        <div className="flex flex-col sm:flex-row gap-3">
+          <div className="relative flex-1">
+            <div className="absolute left-3.5 top-1/2 -translate-y-1/2">
+              <Plane className="w-4 h-4 text-gray-400 -rotate-45" />
+            </div>
+            <input
+              type="text"
+              placeholder="Departure City"
+              className="input-field pl-10"
+              value={departure}
+              onChange={(e) => setDeparture(e.target.value.toUpperCase())}
+            />
+          </div>
+          <div className="relative flex-1">
+            <div className="absolute left-3.5 top-1/2 -translate-y-1/2">
+              <Plane className="w-4 h-4 text-gray-400 rotate-45" />
+            </div>
+            <input
+              type="text"
+              placeholder="Arrival City"
+              className="input-field pl-10"
+              value={arrival}
+              onChange={(e) => setArrival(e.target.value.toUpperCase())}
+            />
+          </div>
+          <button
+            onClick={handleSearch}
+            disabled={loading}
+            className="btn-primary flex items-center justify-center gap-2 disabled:opacity-50 sm:w-auto w-full"
+          >
+            <Search className="w-4 h-4" />
+            Search
+          </button>
+        </div>
       </div>
 
-      <div className="flex gap-4 mb-4">
-        <select
-          value={timeFilter}
-          onChange={(e) => setTimeFilter(e.target.value)}
-          className="border p-2 rounded"
-          style={{ backgroundColor: "#e4ebed", borderRadius: "10px" }}
-        >
-          <option value="ALL">All Times</option>
-          <option value="MORNING">Morning (5 AM – 12 PM)</option>
-          <option value="AFTERNOON">Afternoon (12 PM – 5 PM)</option>
-          <option value="EVENING">Evening (5 PM – 9 PM)</option>
-          <option value="NIGHT">Night (9 PM – 5 AM)</option>
-        </select>
+      {/* Filters */}
+      <div className="card p-4 mb-6">
+        <div className="flex items-center gap-2 mb-3">
+          <SlidersHorizontal className="w-4 h-4 text-gray-500" />
+          <span className="text-sm font-medium text-gray-600">Filters</span>
+        </div>
+        <div className="flex flex-wrap gap-3">
+          <select
+            value={timeFilter}
+            onChange={(e) => setTimeFilter(e.target.value)}
+            className="select-field"
+          >
+            <option value="ALL">All Times</option>
+            <option value="MORNING">Morning (5 AM – 12 PM)</option>
+            <option value="AFTERNOON">Afternoon (12 PM – 5 PM)</option>
+            <option value="EVENING">Evening (5 PM – 9 PM)</option>
+            <option value="NIGHT">Night (9 PM – 5 AM)</option>
+          </select>
 
-        <select
-          value={sortOption}
-          onChange={(e) => setSortOption(e.target.value)}
-          className="border p-2 rounded"
-          style={{ backgroundColor: "#e4ebed", borderRadius: "10px" }}
-        >
-          <option value="">Sort by Price</option>
-          <option value="low-high">Low → High</option>
-          <option value="high-low">High → Low</option>
-        </select>
+          <select
+            value={sortOption}
+            onChange={(e) => setSortOption(e.target.value)}
+            className="select-field"
+          >
+            <option value="">Sort by Price</option>
+            <option value="low-high">Low → High</option>
+            <option value="high-low">High → Low</option>
+          </select>
 
-        <select
-          value={airlineFilter}
-          onChange={(e) => setAirlineFilter(e.target.value)}
-          className="border p-2 rounded"
-          style={{ backgroundColor: "#e4ebed", borderRadius: "10px" }}
-        >
-          <option value="">All Airlines</option>
-          {airlines.map((airline) => (
-            <option key={airline} value={airline}>
-              {airline}
-            </option>
-          ))}
-        </select>
+          <select
+            value={airlineFilter}
+            onChange={(e) => setAirlineFilter(e.target.value)}
+            className="select-field"
+          >
+            <option value="">All Airlines</option>
+            {airlines.map((airline) => (
+              <option key={airline} value={airline}>
+                {airline}
+              </option>
+            ))}
+          </select>
+        </div>
       </div>
 
-      {loading && <p>Loading flights...</p>}
-      {error && <p className="text-red-600">{error}</p>}
-      {!loading && displayFlights.length === 0 && (
-        <p className="text-gray-500">No flights found</p>
+      {/* Results */}
+      {loading && (
+        <div className="flex items-center justify-center py-20">
+          <div className="flex flex-col items-center gap-3">
+            <div className="w-10 h-10 border-4 border-brand-200 border-t-brand-600 rounded-full animate-spin" />
+            <span className="text-gray-500 text-sm">Searching flights...</span>
+          </div>
+        </div>
+      )}
+      {error && (
+        <div className="bg-red-50 border border-red-200 text-red-700 p-4 rounded-xl text-sm">
+          {error}
+        </div>
+      )}
+      {!loading && displayFlights.length === 0 && !error && (
+        <div className="flex flex-col items-center justify-center py-20 text-gray-400">
+          <Plane className="w-12 h-12 mb-3 opacity-50" />
+          <p className="text-lg font-medium text-gray-500">No flights found</p>
+          <p className="text-sm">Try adjusting your search or filters</p>
+        </div>
       )}
 
-      <div className="grid gap-4 mt-4">
+      <div className="grid gap-4">
         {displayFlights.map((flight) => (
           <FlightCard
             key={flight.flight_id}
@@ -169,6 +206,14 @@ const SearchFlights = ({ onBook }) => {
           />
         ))}
       </div>
+
+      {displayFlights.length > 0 && (
+        <div className="text-center mt-6">
+          <span className="text-sm text-gray-400">
+            Showing {displayFlights.length} flight{displayFlights.length !== 1 ? "s" : ""}
+          </span>
+        </div>
+      )}
     </div>
   );
 };

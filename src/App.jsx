@@ -1,12 +1,16 @@
 import { useState, useEffect } from "react";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import BookingHistory from "./pages/BookingHistory";
 import SearchFlights from "./pages/SearchFlights";
+import LandingPage from "./pages/LandingPage";
 import BookingModal from "./components/BookingModal";
+import Navbar from "./components/Navbar";
+import Footer from "./components/Footer";
 import { getUserById } from "./api/api";
 
 const DEMO_USER_ID = "693e866700810bb3b7e3103d";
 
-function App() {
+function AppDashboard() {
   const [accountName, setAccountName] = useState("");
   const [selectedFlight, setSelectedFlight] = useState(null);
   const [wallet, setWallet] = useState(() => {
@@ -53,56 +57,42 @@ function App() {
   };
 
   return (
-    <div style={{ backgroundColor: "" }} className="min-h-screen  bg-gray-100">
-      <header
-        style={{ backgroundColor: "" }}
-        className=" shadow p-4 flex justify-between items-center"
-      >
-        <h1
-          className="text-3xl font-bold tracking-wide text-gray-900"
-          style={{ fontFamily: "Times New Roman, serif" }}
-        >
-          Flight
-          <span style={{ color: "#034f84" }} className="text-blue-700">
-            Stack
-          </span>
-        </h1>
+    <div className="min-h-screen bg-gray-50 flex flex-col">
+      <Navbar
+        accountName={accountName}
+        wallet={wallet}
+        onToggleHistory={() => setShowHistory(!showHistory)}
+        showHistory={showHistory}
+      />
 
-        <div className="flex items-center gap-4">
-          <button
-            onClick={() => setShowHistory(!showHistory)}
-            style={{ backgroundColor: "#034f84", borderRadius: "10px" }}
-            className="px-4 py-2 text-white hover:bg-blue-700 transition"
-          >
-            {showHistory ? "Back to Search" : "Booking History"}
-          </button>
-
-          <div className="flex flex-col items-end">
-            <span
-              style={{ position: "relative", left: "-14px" }}
-              className="text-sm text-gray-600"
-            >
-              👤 {accountName || "User"}
-            </span>
-            <span className="font-medium">Wallet: ₹{wallet}</span>
+      <main className="flex-1">
+        {lastPNR && !showHistory && (
+          <div className="max-w-5xl mx-auto mt-6 px-4 sm:px-6 lg:px-8">
+            <div className="flex items-center gap-3 bg-green-50 border border-green-200 text-green-800 p-4 rounded-xl animate-fade-in">
+              <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0">
+                <svg className="w-5 h-5 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                </svg>
+              </div>
+              <div>
+                <span className="font-medium">Booking confirmed!</span>{" "}
+                PNR: <span className="font-bold">{lastPNR}</span>
+              </div>
+            </div>
           </div>
-        </div>
-      </header>
+        )}
 
-      {lastPNR && !showHistory && (
-        <div className="max-w-4xl mx-auto mt-4 bg-green-100 border border-green-300 text-green-800 p-3 rounded">
-          Booking successful! PNR: <span className="font-bold">{lastPNR}</span>
-        </div>
-      )}
+        {showHistory ? (
+          <BookingHistory
+            userId={DEMO_USER_ID}
+            onBack={() => setShowHistory(false)}
+          />
+        ) : (
+          <SearchFlights onBook={handleBookClick} />
+        )}
+      </main>
 
-      {showHistory ? (
-        <BookingHistory
-          userId={DEMO_USER_ID}
-          onBack={() => setShowHistory(false)}
-        />
-      ) : (
-        <SearchFlights onBook={handleBookClick} />
-      )}
+      <Footer />
 
       {selectedFlight && (
         <BookingModal
@@ -113,6 +103,17 @@ function App() {
         />
       )}
     </div>
+  );
+}
+
+function App() {
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<LandingPage />} />
+        <Route path="/app" element={<AppDashboard />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
 
