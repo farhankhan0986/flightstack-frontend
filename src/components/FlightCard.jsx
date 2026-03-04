@@ -35,65 +35,84 @@ const FlightCard = ({ flight, onBook }) => {
   }, [flight.surge_expires_at, isSurgeActive]);
 
   const getDuration = (start, end) => {
-  const [sh, sm] = start.split(":").map(Number);
-  const [eh, em] = end.split(":").map(Number);
+    const [sh, sm] = start.split(":").map(Number);
+    const [eh, em] = end.split(":").map(Number);
 
-  const startMinutes = sh * 60 + sm;
-  const endMinutes = eh * 60 + em;
+    const startMinutes = sh * 60 + sm;
+    const endMinutes = eh * 60 + em;
 
-  let diff = endMinutes - startMinutes;
+    let diff = endMinutes - startMinutes;
 
-  const hours = Math.floor(diff / 60);
-  const minutes = diff % 60;
+    const hours = Math.floor(diff / 60);
+    const minutes = diff % 60;
 
-  return `${hours}h ${minutes}m`;
-};
+    return `${hours}h ${minutes}m`;
+  };
 
   return (
-    <div
-      style={{ backgroundColor: "#e4ebed", borderRadius: "20px" }}
-      className="border p-4 flex justify-between items-center"
-    >
-      <div className=" flex flex-col justify-between ">
-        <h2 style={{ }} className="font-semibold">
-          {flight.airline} ({flight.flight_id})
-        </h2>
-
-        <p style={{}} className="text-sm text-green-600">
-          {flight.departure_city} → {flight.arrival_city}
-        </p>
-        <p style={{ backgroundColor: "#e4ebed", fontSize:'17px' }} className="text-sm font-bold text-gray-600 mt-1">
-           {flight.departure_time} → {flight.arrival_time}
-
-           {}{} ({getDuration(flight.departure_time, flight.arrival_time)})
-        </p>
-        
-
-        <p style={{ }} className="mt-1">
-          Price: ₹
-          <span className={`font-bold ${isSurgeActive ? "text-red-600" : ""}`}>
-            {flight.current_price}
+    <div className="card p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 hover:border-brand-100 group">
+      {/* Flight Info */}
+      <div className="flex-1 min-w-0">
+        <div className="flex items-center gap-2 mb-2">
+          <span className="inline-flex items-center px-2.5 py-1 bg-brand-50 text-brand-700 text-xs font-semibold rounded-lg">
+            {flight.airline}
           </span>
-          {isSurgeActive && (
-            <span className="text-red-600 text-sm ml-2">[ Surge Active ]</span>
-          )}
-        </p>
-        <span className="text-xs text-gray-500 ml-2">
-</span>
+          <span className="text-xs text-gray-400 font-mono">
+            {flight.flight_id}
+          </span>
+        </div>
 
+        {/* Route & Time */}
+        <div className="flex items-center gap-3 mt-3">
+          <div>
+            <div className="text-xl font-bold text-gray-900">{flight.departure_time}</div>
+            <div className="text-xs text-gray-500 mt-0.5">{flight.departure_city}</div>
+          </div>
 
+          <div className="flex-1 flex flex-col items-center px-2">
+            <span className="text-xs text-gray-400 font-medium mb-1">
+              {getDuration(flight.departure_time, flight.arrival_time)}
+            </span>
+            <div className="w-full h-px bg-gray-200 relative">
+              <div className="absolute left-0 top-1/2 -translate-y-1/2 w-2 h-2 rounded-full bg-brand-500" />
+              <div className="absolute right-0 top-1/2 -translate-y-1/2 w-2 h-2 rounded-full bg-brand-500" />
+            </div>
+            <span className="text-xs text-gray-400 mt-1">Direct</span>
+          </div>
+
+          <div className="text-right">
+            <div className="text-xl font-bold text-gray-900">{flight.arrival_time}</div>
+            <div className="text-xs text-gray-500 mt-0.5">{flight.arrival_city}</div>
+          </div>
+        </div>
+
+        {/* Surge Warning */}
         {isSurgeActive && timeLeft && (
-          <p className="text-xs text-red-500 mt-1">Surge ends in {timeLeft}</p>
+          <div className="mt-3 inline-flex items-center gap-1.5 px-2.5 py-1 bg-red-50 text-red-600 text-xs font-medium rounded-lg border border-red-100">
+            <span className="w-1.5 h-1.5 bg-red-500 rounded-full animate-pulse" />
+            Surge ends in {timeLeft}
+          </div>
         )}
       </div>
 
-      <button
-        style={{ backgroundColor: "#034f84", borderRadius: "10px" }}
-        onClick={() => onBook(flight)}
-        className="text-white px-4 py-2 hover:opacity-90 transition"
-      >
-        Book
-      </button>
+      {/* Price & Book */}
+      <div className="flex sm:flex-col items-center sm:items-end justify-between sm:justify-center gap-2 sm:min-w-[140px]">
+        <div className="text-right">
+          <div className={`text-2xl font-bold ${isSurgeActive ? "text-red-600" : "text-gray-900"}`}>
+            ₹{flight.current_price?.toLocaleString()}
+          </div>
+          {isSurgeActive && (
+            <span className="text-xs text-red-500 font-medium">Surge Active</span>
+          )}
+          <div className="text-xs text-gray-400">per person</div>
+        </div>
+        <button
+          onClick={() => onBook(flight)}
+          className="btn-primary mt-1 text-sm px-5 py-2"
+        >
+          Book Now
+        </button>
+      </div>
     </div>
   );
 };
