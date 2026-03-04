@@ -72,7 +72,7 @@ const BookingModal = ({ flight, userId, onClose, onSuccess }) => {
               <span className="text-xs text-gray-400 font-mono ml-2">{flight.flight_id}</span>
             </div>
             <div className="text-right">
-              <div className="text-2xl font-bold text-gray-900">₹{flight.current_price?.toLocaleString()}</div>
+              <div className="text-2xl font-bold text-gray-900">₹{(flight.current_price ?? 0).toLocaleString()}</div>
               <div className="text-xs text-gray-400">per person</div>
             </div>
           </div>

@@ -99,7 +99,7 @@ const FlightCard = ({ flight, onBook }) => {
       <div className="flex sm:flex-col items-center sm:items-end justify-between sm:justify-center gap-2 sm:min-w-[140px]">
         <div className="text-right">
           <div className={`text-2xl font-bold ${isSurgeActive ? "text-red-600" : "text-gray-900"}`}>
-            ₹{flight.current_price?.toLocaleString()}
+            ₹{(flight.current_price ?? 0).toLocaleString()}
           </div>
           {isSurgeActive && (
             <span className="text-xs text-red-500 font-medium">Surge Active</span>
